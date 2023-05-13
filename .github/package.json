@@ -1,7 +1,7 @@
 {
-    "name": "ts-actions",
-    "version": "1.0.0",
-    "description": "TypeScript actions for the GitHub workflow",
+    "name": "github-script-ts",
+    "version": "0.0.1",
+    "description": "A GitHub workflow for Typescript actions",
     "private": true,
     "scripts": {
         "format": "prettier --write src",
