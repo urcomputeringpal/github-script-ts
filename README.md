@@ -28,7 +28,7 @@ A workflow wrapping https://github.com/actions/github-script/ with Typescript fu
   uses: urcomputeringpal/github-script-ts@v0
   with:
       github-token: ${{ secrets.GITHUB_TOKEN }}
-      script: function1
+      function: function1
 
 - name: Use function1 result
   run: |
