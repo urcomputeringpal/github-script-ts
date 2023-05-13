@@ -9,7 +9,7 @@ on:
 jobs:
     test:
         name: |
-            ${{ contains(github.event.pull_request.labels.*.name, 'test') && 'test' || 'Add the "test" label to the PR to run the required test' }}
+            ${{ contains(github.event.pull_request.labels.*.name, 'test') && 'test' || 'add the "test" label to the PR to run the required test' }}
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
