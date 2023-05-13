@@ -45,4 +45,4 @@ jobs:
 
             - if: github.event.act != 'true'
               run: |
-                  [ "${{ steps.getLabel.outputs.result }}" == "Test" ]
+                  [ "${{ steps.getLabel.outputs.result }}" == "test" ]
