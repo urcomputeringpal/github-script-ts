@@ -50,7 +50,7 @@ runs:
 
         - name: Setup node
           if: inputs.function == ''
-          uses: actions/setup-node@v3
+          uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
           with:
               node-version: ${{ env.node_version }}
               cache: npm
@@ -62,7 +62,7 @@ runs:
           shell: bash
           run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
-        - uses: actions/cache@v3
+        - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
           if: inputs.function == ''
           id: npm-cache
           with:
@@ -80,7 +80,7 @@ runs:
               cd ${{ inputs.path }}
               npm ci
 
-        - uses: actions/cache@v3
+        - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
           if: inputs.function == ''
           id: build-cache
           with:
@@ -99,7 +99,7 @@ runs:
         - name: "Execute script"
           if: inputs.function != ''
           id: script
-          uses: "actions/github-script@v6"
+          uses: "actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410" # v6.4.1
           env:
               FUNCTION_NAME: ${{ inputs.function }}
           with:
