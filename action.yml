@@ -87,7 +87,7 @@ runs:
               path: |
                   ${{ inputs.path }}/dist
               key: |
-                  github-script-ts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'src/*.ts')) }}
+                  github-script-ts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}-${{ hashFiles(format('{0}/{1}', inputs.path, '**/*.ts')) }}
 
         - name: Build
           if: inputs.function == '' && steps.build-cache.outputs.cache-hit != 'true'
