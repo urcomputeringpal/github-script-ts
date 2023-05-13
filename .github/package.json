@@ -11,9 +11,7 @@
         "integration": "./test.sh"
     },
     "dependencies": {
-        "@actions/core": "1.9.1",
-        "@actions/github": "5.0.0",
-        "@octokit/rest": "18.12.0"
+        "github-script": "https://github.com/actions/github-script/archive/refs/tags/v6.4.1.tar.gz"
     },
     "devDependencies": {
         "@types/jest": "29.5.1",
