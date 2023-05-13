@@ -1,4 +1,4 @@
-name: Test
+name: test
 on:
     pull_request:
         types: [opened, reopened, synchronize, labeled]
@@ -8,7 +8,8 @@ on:
 
 jobs:
     test:
-        name: Add the 'test' label to the PR to run the required test
+        name: |
+            ${{ contains(github.event.pull_request.labels.*.name, 'test') && 'test' || 'Add the "test" label to the PR to run the required test' }}
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
