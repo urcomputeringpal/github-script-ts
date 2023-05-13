@@ -23,7 +23,8 @@ inputs:
     previews:
         description: A comma-separated list of API previews to accept
     result-encoding:
-        description: Either "string" or "json" (default "json")—how the result will be encoded
+        description: |
+            Either "string" or "json" (default "string")—how the result will be encoded
         default: string
     retries:
         description: The number of times to retry a request
