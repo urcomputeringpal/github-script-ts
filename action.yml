@@ -101,7 +101,7 @@ runs:
           id: script
           uses: "actions/github-script@v6"
           env:
-              FUNCTION_NAME: ${{ inputs.script }}
+              FUNCTION_NAME: ${{ inputs.function }}
           with:
               result-encoding: ${{ inputs.result-encoding }}
               retries: ${{ inputs.retries }}
