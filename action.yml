@@ -1,0 +1,114 @@
+name: "Run a TypeScript function"
+description: "Runs a TypeScript script using actions/github-script"
+inputs:
+    github-token:
+        description: The GitHub token used to create an authenticated client
+        default: ${{ github.token }}
+    path:
+        description: "Path to the functions"
+        default: ./.github
+        required: true
+    build:
+        description: Build command
+        default: npm run build
+    function:
+        description: "Name of the function to call"
+        default: ""
+    debug:
+        description: Whether to tell the GitHub client to log details of its requests. true or false. Default is to run in debug mode when the GitHub Actions step debug logging is turned on.
+        default: ${{ runner.debug == '1' }}
+    user-agent:
+        description: An optional user-agent string
+        default: actions/github-script
+    previews:
+        description: A comma-separated list of API previews to accept
+    result-encoding:
+        description: Either "string" or "json" (default "json")—how the result will be encoded
+        default: string
+    retries:
+        description: The number of times to retry a request
+        default: "0"
+    retry-exempt-status-codes:
+        description: A comma separated list of status codes that will NOT be retried e.g. "400,500". No effect unless `retries` is set
+        default: 400,401,403,404,422 # from https://github.com/octokit/plugin-retry.js/blob/9a2443746c350b3beedec35cf26e197ea318a261/src/index.ts#L14
+outputs:
+    result:
+        description: "Result of the script"
+        value: ${{ steps.script.outputs.result }}
+
+runs:
+    using: "composite"
+    steps:
+        - name: Setup environment
+          if: inputs.function == ''
+          shell: bash
+          run: |
+              test -f .nvmrc || exit 0
+              NODE_VERSION=$(cat .nvmrc | xargs)
+              echo "node_version=$NODE_VERSION" >> $GITHUB_ENV
+
+        - name: Setup node
+          if: inputs.function == ''
+          uses: actions/setup-node@v3
+          with:
+              node-version: ${{ env.node_version }}
+              cache: npm
+              cache-dependency-path: ${{ inputs.path }}/package-lock.json
+
+        - name: Get npm cache directory
+          if: inputs.function == ''
+          id: npm-cache-dir
+          shell: bash
+          run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+        - uses: actions/cache@v3
+          if: inputs.function == ''
+          id: npm-cache
+          with:
+              path: |
+                  ${{ steps.npm-cache-dir.outputs.dir }}
+              key: |
+                  setup-ts-scripts-npm-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}
+              restore-keys: |
+                  setup-ts-scripts-npm-${{ runner.os }}-
+
+        - name: Install dependencies
+          if: inputs.function == ''
+          shell: bash
+          run: |
+              cd ${{ inputs.path }}
+              npm ci
+
+        - uses: actions/cache@v3
+          if: inputs.function == ''
+          id: build-cache
+          with:
+              path: |
+                  ${{ inputs.path }}/dist
+              key: |
+                  setup-ts-scripts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'src/*.ts')) }}
+
+        - name: Build
+          if: inputs.function == '' && steps.build-cache.outputs.cache-hit != 'true'
+          shell: bash
+          working-directory: ${{ inputs.path }}
+          run: |
+              ${{ inputs.build }}
+
+        - name: "Execute script"
+          if: inputs.function != ''
+          id: script
+          uses: "actions/github-script@v6"
+          env:
+              FUNCTION_NAME: ${{ inputs.script }}
+          with:
+              result-encoding: ${{ inputs.result-encoding }}
+              retries: ${{ inputs.retries }}
+              user-agent: ${{ inputs.user-agent }}
+              debug: ${{ inputs.debug }}
+              github-token: ${{ inputs.github-token }}
+              previews: ${{ inputs.previews }}
+              retry-exempt-status-codes: ${{ inputs.retry-exempt-status-codes }}
+              script: |
+                  const { ${{ env.FUNCTION_NAME }} } = await import('${{ github.workspace }}/.github/dist/index.js')
+                  return await ${{ env.FUNCTION_NAME }}({github, context, core});

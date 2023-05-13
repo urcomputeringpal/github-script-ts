@@ -1,0 +1,48 @@
+name: Test
+on:
+  pull_request:
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'true'
+
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+      - uses: ./
+        name: Setup
+        id: setup
+        with:
+          build: npm run format && npm run test && npm run build
+
+      - name: Run prNumber
+        id: prNumber
+        uses: ./
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: prNumber
+
+      - name: Validate result
+        run: |
+            echo "PR number is ${{ steps.prNumber.outputs.result }}"
+
+      - name: Get label
+        if: github.event.act != 'true'
+        id: getLabel
+        uses: ./
+        env:
+            PR_NUMBER: ${{ steps.prNumber.outputs.result }}
+            LABEL: "test"
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: getLabel
+
+      - if: github.event.act != 'true'
+        run: |
+            [ "${{ steps.getLabel.outputs.result }}" == "Test" ]
