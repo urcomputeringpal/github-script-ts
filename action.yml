@@ -69,9 +69,9 @@ runs:
               path: |
                   ${{ steps.npm-cache-dir.outputs.dir }}
               key: |
-                  setup-ts-scripts-npm-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}
+                  github-script-ts-npm-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}
               restore-keys: |
-                  setup-ts-scripts-npm-${{ runner.os }}-
+                  github-script-ts-npm-${{ runner.os }}-
 
         - name: Install dependencies
           if: inputs.function == ''
@@ -87,7 +87,7 @@ runs:
               path: |
                   ${{ inputs.path }}/dist
               key: |
-                  setup-ts-scripts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'src/*.ts')) }}
+                  github-script-ts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'src/*.ts')) }}
 
         - name: Build
           if: inputs.function == '' && steps.build-cache.outputs.cache-hit != 'true'
