@@ -1,15 +1,14 @@
 name: Test
 on:
     pull_request:
+        types: [opened, reopened, synchronize, labeled]
+    push:
+        branches:
+            - main
 
 jobs:
-    prepare:
-        runs-on: ubuntu-latest
-        steps:
-            - run: "true"
-
     test:
-        needs: prepare
+        name: Add the 'test' label to the PR to run the required test
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -23,17 +22,19 @@ jobs:
 
             - name: Run prNumber
               id: prNumber
+              if: github.event_name == 'pull_request'
               uses: ./
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: prNumber
 
             - name: Validate result
+              if: github.event_name == 'pull_request'
               run: |
                   echo "PR number is ${{ steps.prNumber.outputs.result }}"
 
             - name: Get label
-              if: github.event.act != 'true'
+              if: github.event.act != 'true' && github.event_name == 'pull_request'
               id: getLabel
               uses: ./
               env:
@@ -43,6 +44,6 @@ jobs:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: getLabel
 
-            - if: github.event.act != 'true'
+            - if: github.event.act != 'true' && github.event_name == 'pull_request'
               run: |
                   [ "${{ steps.getLabel.outputs.result }}" == "test" ]
