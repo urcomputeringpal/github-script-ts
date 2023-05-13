@@ -9,7 +9,7 @@ inputs:
         default: ./.github
         required: true
     build:
-        description: Build command
+        description: Build command. This command is expected to generate output in the `dist` directory.
         default: npm run build
     function:
         description: "Name of the function to call"
@@ -87,7 +87,7 @@ runs:
               path: |
                   ${{ inputs.path }}/dist
               key: |
-                  github-script-ts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'src/*.ts')) }}
+                  github-script-ts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}-${{ hashFiles(format('{0}/{1}', inputs.path, '**/*.ts')) }}
 
         - name: Build
           if: inputs.function == '' && steps.build-cache.outputs.cache-hit != 'true'
@@ -111,5 +111,5 @@ runs:
               previews: ${{ inputs.previews }}
               retry-exempt-status-codes: ${{ inputs.retry-exempt-status-codes }}
               script: |
-                  const { ${{ env.FUNCTION_NAME }} } = await import('${{ github.workspace }}/.github/dist/index.js')
+                  const { ${{ env.FUNCTION_NAME }} } = await import('${{ github.workspace }}/${{ inputs.path }}/dist/index.js')
                   return await ${{ env.FUNCTION_NAME }}({github, context, core});

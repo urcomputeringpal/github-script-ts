@@ -21,6 +21,11 @@ export const error: jest.MockedFunction<typeof core.error> = jest.fn();
 export const warning: jest.MockedFunction<typeof core.warning> = jest.fn();
 export const getIDToken: jest.MockedFunction<typeof core.getIDToken> = jest.fn();
 export const notice: jest.MockedFunction<typeof core.notice> = jest.fn();
+export const summary: jest.MockedFunction<any> = jest.fn();
+export const markdownSummary: jest.MockedFunction<any> = jest.fn();
+export const toPosixPath: jest.MockedFunction<typeof core.toPosixPath> = jest.fn();
+export const toWin32Path: jest.MockedFunction<typeof core.toWin32Path> = jest.fn();
+export const toPlatformPath: jest.MockedFunction<typeof core.toPlatformPath> = jest.fn();
 export declare enum ExitCode {
     /**
      * A code indicating that the action was successful
