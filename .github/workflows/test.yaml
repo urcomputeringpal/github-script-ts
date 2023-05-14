@@ -2,10 +2,6 @@ name: test
 on:
     pull_request:
         types: [opened, reopened, synchronize, labeled]
-    push:
-        branches:
-            - main
-
 jobs:
     test:
         name: |
@@ -20,6 +16,7 @@ jobs:
               id: setup
               with:
                   build: npm run format && npm run test && npm run build
+                  path: ./
 
             - name: Run prNumber
               id: prNumber
@@ -28,6 +25,7 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: prNumber
+                  path: ./
 
             - name: Validate result
               if: github.event_name == 'pull_request'
@@ -44,6 +42,7 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: getLabel
+                  path: ./
 
             - if: github.event.act != 'true' && github.event_name == 'pull_request'
               run: |
