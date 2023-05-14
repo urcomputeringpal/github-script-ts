@@ -15,7 +15,7 @@ jobs:
               name: Setup
               id: github-script-ts
               with:
-                  build: npm run format && npm run test && npm run build && npm install
+                  build: npm run format && npm run test && npm run build
                   path: ./.github
 
             - name: Run prNumber
