@@ -65,7 +65,7 @@ export { function1 } from "./function1";
     "files": ["dist/**/*.d.ts", "dist/**/*.js"],
     "main": "dist/index.js",
     "dependencies": {
-        "@urcomputeringpal/github-script-ts": "0.0.1"
+        "@urcomputeringpal/github-script-ts": "0.0.7"
     }
 }
 ```
