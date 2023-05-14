@@ -1,6 +1,6 @@
 {
     "name": "@urcomputeringpal/github-script-ts",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "actions/github-script for Typescript",
     "repository": "https://github.com/urcomputeringpal/github-script-ts",
     "files": [
@@ -13,7 +13,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "build": "tsc",
-        "prepare": "npm run build",
+        "prepare": "npm run format && npm run build",
         "integration": "./test.sh"
     },
     "dependencies": {
