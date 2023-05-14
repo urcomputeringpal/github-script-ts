@@ -4,15 +4,15 @@ A workflow wrapping https://github.com/actions/github-script with Typescript fun
 
 ## Features
 
-- Enables easily running Typescript functions exported from a module like the one in [`.github/`](./.github/) in Actions workflows. Builds and caches build results automatically.
-- Allows writing tests for your scripts and running them locally with `npm test`.
+- Enables easily running Typescript functions exported from a tiny private module like the one in [`.github/`](./.github/) in Actions workflows. Caches build results automatically.
+- Enables a local testing workflow for advanced Actions logic.
 - Provides a superior experience to editing Javascript embedded in YAML.
 
 ## Usage
 
 ### Writing scripts
 
-The `@urcomputeringpal/github-script-ts` package contains a type definition for the [arguments](https://github.com/actions/github-script#actionsgithub-script) passed to your script. Put all of these files in `.github` to create scripts of your own:
+The [`@urcomputeringpal/github-script-ts`](https://www.npmjs.com/package/@urcomputeringpal/github-script-ts) package contains a type definition for the [arguments](https://github.com/actions/github-script#actionsgithub-script) passed to your script. Put all of these files in `.github` to create scripts of your own:
 
 #### `src/function1.ts`
 
@@ -66,19 +66,13 @@ export { function1 } from "./function1";
 
 ### Running your script in a workflow
 
+See [`action.yml`](./action.yml) for all accepted inputs.
+
 ```yaml
 - name: Checkout repository
   uses: actions/checkout@v3
 
   # Perform setup. Caches build results with actions/cache.
-  # Expects a package.json with a "build" script that exports
-  # functions that accept the following arguments
-  # (see .github/src/types.ts):
-  #
-  # * github - A pre-authenticated octokit/rest.js client with pagination plugins
-  # * context - An object containing the context of the workflow run
-  # * core - A reference to the @actions/core package
-
 - name: Setup TypeScript scripts
   uses: urcomputeringpal/github-script-ts@v0
 
@@ -91,6 +85,13 @@ export { function1 } from "./function1";
   with:
       github-token: ${{ secrets.GITHUB_TOKEN }}
       function: function1
+      # args: >
+      #   {github, context, core, exec, io, fetch}
+      # path: ./.github
+      # build: npm run build
+      # module: src/index.js
+      # result-encoding: string
+      
 
 - name: Use function1 result
   run: |
