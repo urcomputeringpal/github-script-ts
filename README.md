@@ -1,8 +1,70 @@
 # github-script-ts
 
-A workflow wrapping https://github.com/actions/github-script with Typescript functionality. Export functions from a module like the one in this repo and call them easily by name.
+A workflow wrapping https://github.com/actions/github-script with Typescript functionality.
+
+## Features
+
+- Enables easily running Typescript functions exported from a module like the one in [`.github/`](./.github/) in Actions workflows. Builds and caches build results automatically.
+- Allows writing tests for your scripts and running them locally with `npm test`.
+- Provides a superior experience to editing Javascript embedded in YAML.
 
 ## Usage
+
+### Writing scripts
+
+The `@urcomputeringpal/github-script-ts` package contains a type definition for the [arguments](https://github.com/actions/github-script#actionsgithub-script) passed to your script. Put all of these files in `.github` to create scripts of your own:
+
+#### `src/function1.ts`
+
+```typescript
+import { GitHubScriptArguments } from "@urcomputeringpal/github-script-ts";
+
+export async function function1(args: GitHubScriptArguments): Promise<String> {
+    // const { github, context, core } = args;
+    // const { glob, io, exec, fetch } = args;
+    // ...
+    return 'string';
+}
+```
+
+#### `src/index.ts`
+
+```typescript
+export { function1 } from "./function1";
+```
+
+#### `package.json`
+
+```json
+{
+    "name": "ts-scripts",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "build": "tsc",
+    },
+    "dependencies": {
+        "@urcomputeringpal/github-script-ts": "0.0.1"
+    }
+}
+```
+
+#### `tsconfig.json`
+
+```json
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": true,
+        "target": "es5",
+        "strict": true
+    },
+    "include": ["src/*.ts"],
+    "exclude": ["node_modules", "**/*.test.ts"]
+}
+```
+
+### Running your script in a workflow
 
 ```yaml
 - name: Checkout repository
