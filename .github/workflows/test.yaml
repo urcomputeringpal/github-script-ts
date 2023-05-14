@@ -13,9 +13,9 @@ jobs:
 
             - uses: ./
               name: Setup
-              id: setup
+              id: github-script-ts
               with:
-                  build: npm run format && npm run test && npm run build
+                  build: npm run format && npm run test && npm run build && npm install
                   path: ./.github
 
             - name: Run prNumber
@@ -47,3 +47,18 @@ jobs:
             - if: github.event.act != 'true' && github.event_name == 'pull_request'
               run: |
                   [ "${{ steps.getLabel.outputs.result }}" == "test" ]
+
+            - name: Run setEnv function using actions/github-script
+              uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
+              env:
+                  VARIABLE_NAME: "SET_ENV"
+                  VARIABLE_VALUE: "worked"
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  result-encoding: string
+                  script: |
+                      const { setEnv } = await import("${{ steps.github-script-ts.outputs.module }}");
+                      const result = await setEnv({core});
+
+            - run: |
+                  [ "${SET_ENV}" == "worked" ]
