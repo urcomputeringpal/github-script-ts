@@ -5,7 +5,7 @@
     "repository": "https://github.com/urcomputeringpal/github-script-ts",
     "files": [
         "src/**/*.d.ts",
-        "src/**/*js",
+        "src/**/*.js"
     ],
     "main": "dist/index.js",
     "types": "dist/types.d.ts",
