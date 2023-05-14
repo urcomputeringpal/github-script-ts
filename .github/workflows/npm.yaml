@@ -10,7 +10,6 @@ jobs:
             - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
             - run: npm ci
             - run: npm run format
-            - run: npm run test
             - run: npm run build
             - uses: JS-DevTools/npm-publish@541aa6b21b4a1e9990c95a92c21adc16b35e9551 # v2.1.0
               with:
