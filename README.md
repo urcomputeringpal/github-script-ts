@@ -113,7 +113,8 @@ See [`action.yml`](./action.yml) for all accepted inputs.
       echo "function1 result: ${{ steps.function1.outputs.result }}"
 
   # You can also use actions/github-script and import your module
-  # from the path specified in the `github-script-ts` step.
+  # from the path specified in the `github-script-ts` step. This allows
+  # setting multiple outputs values using core.setOutput.
 - name: Run custom function using actions/github-script
   id: custom
   uses: actions/github-script@v6
