@@ -14,6 +14,9 @@ inputs:
     function:
         description: "Name of the function to call"
         default: ""
+    args:
+        description: "Arguments to pass to the function"
+        default: "{github, context, core, exec, io, fetch}"
     debug:
         description: Whether to tell the GitHub client to log details of its requests. true or false. Default is to run in debug mode when the GitHub Actions step debug logging is turned on.
         default: ${{ runner.debug == '1' }}
@@ -112,4 +115,4 @@ runs:
               retry-exempt-status-codes: ${{ inputs.retry-exempt-status-codes }}
               script: |
                   const { ${{ env.FUNCTION_NAME }} } = await import('${{ github.workspace }}/${{ inputs.path }}/dist/index.js')
-                  return await ${{ env.FUNCTION_NAME }}({github, context, core});
+                  return await ${{ env.FUNCTION_NAME }}(${{ inputs.args }});

@@ -1,6 +1,6 @@
 # github-script-ts
 
-A workflow wrapping https://github.com/actions/github-script with Typescript functionality. Export functions from a module like the one in [`.github`](./.github) and call them easily by name.
+A workflow wrapping https://github.com/actions/github-script with Typescript functionality. Export functions from a module like the one in this repo and call them easily by name.
 
 ## Usage
 
