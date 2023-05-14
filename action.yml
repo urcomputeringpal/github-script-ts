@@ -8,8 +8,11 @@ inputs:
         description: "Path to the functions"
         default: ./.github
         required: true
+    module:
+        description: The generated file exporting all of the functions from the module. Defaults to 'src/index.js'.
+        default: src/index.js
     build:
-        description: Build command. This command is expected to generate output in the `dist` directory.
+        description: Build command. This command is expected to generate an index.js in the path directory.
         default: npm run build
     function:
         description: "Name of the function to call"
@@ -72,9 +75,9 @@ runs:
               path: |
                   ${{ steps.npm-cache-dir.outputs.dir }}
               key: |
-                  github-script-ts-npm-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}
+                  github-script-ts-npm-v2-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}
               restore-keys: |
-                  github-script-ts-npm-${{ runner.os }}-
+                  github-script-ts-npm-v2-${{ runner.os }}-
 
         - name: Install dependencies
           if: inputs.function == ''
@@ -88,9 +91,9 @@ runs:
           id: build-cache
           with:
               path: |
-                  ${{ inputs.path }}/dist
+                  ${{ inputs.path }}
               key: |
-                  github-script-ts-build-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}-${{ hashFiles(format('{0}/{1}', inputs.path, '**/*.ts')) }}
+                  github-script-ts-build-v2-${{ runner.os }}-${{ hashFiles(format('{0}/{1}', inputs.path, 'package-lock.json')) }}-${{ hashFiles(format('{0}/{1}', inputs.path, '**/*.ts')) }}
 
         - name: Build
           if: inputs.function == '' && steps.build-cache.outputs.cache-hit != 'true'
@@ -114,5 +117,5 @@ runs:
               previews: ${{ inputs.previews }}
               retry-exempt-status-codes: ${{ inputs.retry-exempt-status-codes }}
               script: |
-                  const { ${{ env.FUNCTION_NAME }} } = await import('${{ github.workspace }}/${{ inputs.path }}/dist/index.js')
+                  const { ${{ env.FUNCTION_NAME }} } = await import('${{ github.workspace }}/${{ inputs.path }}/${{ inputs.module }}')
                   return await ${{ env.FUNCTION_NAME }}(${{ inputs.args }});

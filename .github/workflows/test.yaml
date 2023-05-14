@@ -16,7 +16,7 @@ jobs:
               id: setup
               with:
                   build: npm run format && npm run test && npm run build
-                  path: ./
+                  path: ./.github
 
             - name: Run prNumber
               id: prNumber
@@ -25,7 +25,7 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: prNumber
-                  path: ./
+                  path: ./.github
 
             - name: Validate result
               if: github.event_name == 'pull_request'
@@ -42,7 +42,7 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: getLabel
-                  path: ./
+                  path: ./.github
 
             - if: github.event.act != 'true' && github.event_name == 'pull_request'
               run: |

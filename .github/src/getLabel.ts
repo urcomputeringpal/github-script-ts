@@ -1,4 +1,4 @@
-import { GitHubScriptArguments } from "./types";
+import { GitHubScriptArguments } from "@urcomputeringpal/github-script-ts";
 
 export async function getLabel(args: GitHubScriptArguments): Promise<String> {
     const { github, context, core } = args;

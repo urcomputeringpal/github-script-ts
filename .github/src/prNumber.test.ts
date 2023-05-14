@@ -1,4 +1,4 @@
-import { GitHubScriptArguments } from "./types";
+import { GitHubScriptArguments } from "@urcomputeringpal/github-script-ts";
 import { prNumber } from "./prNumber";
 import { Context } from "@actions/github/lib/context";
 import * as core from "./__mocks__/core";
