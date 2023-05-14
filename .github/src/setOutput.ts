@@ -1,12 +1,13 @@
 import { GitHubScriptArguments } from "@urcomputeringpal/github-script-ts";
 
-export async function setEnv(args: GitHubScriptArguments): Promise<String> {
+export async function setOutput(args: GitHubScriptArguments): Promise<String> {
     const { core } = args;
     if (core === undefined) {
         throw new Error("core is undefined");
     }
-    const name = process.env["VARIABLE_NAME"] ?? "NAME";
-    const value = process.env["VARIABLE_VALUE"] ?? "";
+    const name = process.env["OUTPUT_NAME"] ?? "NAME";
+    const value = process.env["OUTPUT_VALUE"] ?? "";
     core.exportVariable(name, value);
+    core.setOutput(name, value);
     return "";
 }

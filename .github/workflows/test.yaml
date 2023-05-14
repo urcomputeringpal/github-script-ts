@@ -16,7 +16,6 @@ jobs:
               id: github-script-ts
               with:
                   build: npm run format && npm run test && npm run build
-                  path: ./.github
 
             - name: Run prNumber
               id: prNumber
@@ -25,7 +24,6 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: prNumber
-                  path: ./.github
 
             - name: Validate result
               if: github.event_name == 'pull_request'
@@ -42,23 +40,42 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: getLabel
-                  path: ./.github
 
             - if: github.event.act != 'true' && github.event_name == 'pull_request'
               run: |
                   [ "${{ steps.getLabel.outputs.result }}" == "test" ]
 
-            - name: Run setEnv function using actions/github-script
-              uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
+            - name: setOutput and exportVariable suprisingly work when called in a composite run step
+              id: exportVariable
               env:
-                  VARIABLE_NAME: "SET_ENV"
-                  VARIABLE_VALUE: "worked"
+                  OUTPUT_NAME: "SET_IN_COMPOSITE_WORKFLOW"
+                  OUTPUT_VALUE: "cool"
+              uses: ./
+              with:
+                  function: setOutput
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - run: |
+                  set -x
+                  [ "${{ steps.exportVariable.outputs.SET_IN_COMPOSITE_WORKFLOW }}" == "cool" ]
+                  [ "${SET_IN_COMPOSITE_WORKFLOW}" == "cool" ]
+                  [ "${{ env.SET_IN_COMPOSITE_WORKFLOW }}" == "cool" ]
+
+            - name: Run setOutput function using actions/github-script
+              uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
+              id: setOutput
+              env:
+                  OUTPUT_NAME: "SET_OUTPUT"
+                  OUTPUT_VALUE: "worked"
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   result-encoding: string
                   script: |
-                      const { setEnv } = await import("${{ steps.github-script-ts.outputs.module }}");
-                      const result = await setEnv({core});
+                      const { setOutput } = await import("${{ steps.github-script-ts.outputs.module }}");
+                      const result = await setOutput({core});
 
             - run: |
-                  [ "${SET_ENV}" == "worked" ]
+                  set -x
+                  [ "${SET_OUTPUT}" == "worked" ]
+                  [ "${{ steps.setOutput.outputs.SET_OUTPUT }}" == "worked" ]
+                  [ "${{ env.SET_OUTPUT }}" == "worked" ]

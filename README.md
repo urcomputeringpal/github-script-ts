@@ -112,10 +112,8 @@ See [`action.yml`](./action.yml) for all accepted inputs.
   run: |
       echo "function1 result: ${{ steps.function1.outputs.result }}"
 
-  # If you want to set multiple outputs or influence the environment,
-  # use actions/github-script directly and import your module from
-  # the path specified in the `github-script-ts` step. The `result`
-  # output will still be set to the return value of your script.
+  # You can also use actions/github-script and import your module
+  # from the path specified in the `github-script-ts` step.
 - name: Run custom function using actions/github-script
   id: custom
   uses: actions/github-script@v6
@@ -129,6 +127,5 @@ See [`action.yml`](./action.yml) for all accepted inputs.
       result-encoding: string
       script: |
           const { custom } = await import("${{ steps.github-script-ts.outputs.module }}");
-          // custom can call core.exportVariable, core.setOutput, etc.
           return await custom({core,context});
 ```
