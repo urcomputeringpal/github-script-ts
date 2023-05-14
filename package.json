@@ -1,14 +1,14 @@
 {
     "name": "@urcomputeringpal/github-script-ts",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "actions/github-script for Typescript",
     "repository": "https://github.com/urcomputeringpal/github-script-ts",
     "files": [
         "src/**/*.d.ts",
         "src/**/*.js"
     ],
-    "main": "dist/index.js",
-    "types": "dist/types.d.ts",
+    "main": "src/index.js",
+    "types": "src/types.d.ts",
     "scripts": {
         "format": "prettier --write .",
         "format:check": "prettier --check .",
