@@ -1,9 +1,5 @@
 name: renovate
 on:
-    push:
-        branches:
-            - main
-            - renovate/configure
     pull_request:
     workflow_dispatch: {}
     schedule:

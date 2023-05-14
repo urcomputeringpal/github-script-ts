@@ -1,18 +1,19 @@
 {
     "name": "@urcomputeringpal/github-script-ts",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "actions/github-script for Typescript",
     "repository": "https://github.com/urcomputeringpal/github-script-ts",
     "files": [
-        "src/**/*.d.ts",
-        "src/**/*.js"
+        "dist/**/*.d.ts",
+        "dist/**/*.js"
     ],
-    "main": "src/index.js",
-    "types": "src/types.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/types.d.ts",
     "scripts": {
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "build": "tsc",
+        "prepare": "npm run build",
         "integration": "./test.sh"
     },
     "dependencies": {

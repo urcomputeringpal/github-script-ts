@@ -4,9 +4,9 @@ A workflow wrapping https://github.com/actions/github-script with Typescript fun
 
 ## Features
 
-- Enables easily running Typescript functions exported from a tiny private module like the one in [`.github/`](./.github/) in Actions workflows. Caches build results automatically.
-- Enables a local testing workflow for advanced Actions logic.
-- Provides a superior experience to editing Javascript embedded in YAML.
+-   Enables easily running Typescript functions exported from a tiny private module like the one in [`.github/`](./.github/) in Actions workflows. Caches build results automatically.
+-   Enables a local testing workflow for advanced Actions logic.
+-   Provides a superior experience to editing Javascript embedded in YAML.
 
 ## Usage
 
@@ -23,7 +23,7 @@ export async function function1(args: GitHubScriptArguments): Promise<String> {
     // const { github, context, core } = args;
     // const { glob, io, exec, fetch } = args;
     // ...
-    return 'string';
+    return "string";
 }
 ```
 
@@ -31,22 +31,6 @@ export async function function1(args: GitHubScriptArguments): Promise<String> {
 
 ```typescript
 export { function1 } from "./function1";
-```
-
-#### `package.json`
-
-```json
-{
-    "name": "ts-scripts",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "build": "tsc",
-    },
-    "dependencies": {
-        "@urcomputeringpal/github-script-ts": "0.0.1"
-    }
-}
 ```
 
 #### `tsconfig.json`
@@ -57,10 +41,32 @@ export { function1 } from "./function1";
         "module": "commonjs",
         "declaration": true,
         "target": "es5",
-        "strict": true
+        "strict": true,
+        "outDir": "dist",
+        "esModuleInterop": true
     },
     "include": ["src/*.ts"],
     "exclude": ["node_modules", "**/*.test.ts"]
+}
+```
+
+#### `package.json`
+
+```json
+{
+    "name": "ts-scripts",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "build": "tsc"
+        // Build will be run as needed by this Action, don't specify it here
+        // prepare: ""
+    },
+    "files": ["dist/**/*.d.ts", "dist/**/*.js"],
+    "main": "dist/index.js",
+    "dependencies": {
+        "@urcomputeringpal/github-script-ts": "0.0.1"
+    }
 }
 ```
 
@@ -72,9 +78,15 @@ See [`action.yml`](./action.yml) for all accepted inputs.
 - name: Checkout repository
   uses: actions/checkout@v3
 
-  # Perform setup. Caches build results with actions/cache.
+  # Perform setup if called without a 'function'. Compiles your Typescript
+  # module and caches build results with actions/cache.
 - name: Setup TypeScript scripts
+  id: github-script-ts
   uses: urcomputeringpal/github-script-ts@v0
+  # with:
+  #     path: ./.github
+  #     build: npm run build
+  #     dist: dist
 
   # Run function1. If it returns a value it can be used in subsequent steps
   # by accessing the `result` output of the step like so
@@ -82,18 +94,39 @@ See [`action.yml`](./action.yml) for all accepted inputs.
 - name: Run function1
   id: function1
   uses: urcomputeringpal/github-script-ts@v0
+  # You can pass environment variables to your script and then
+  # read them from process.env.
+  # https://github.com/actions/github-script/#use-env-as-input
+  env:
+      FOO: bar
   with:
       github-token: ${{ secrets.GITHUB_TOKEN }}
       function: function1
       # args: >
       #   {github, context, core, exec, io, fetch}
       # path: ./.github
-      # build: npm run build
-      # module: src/index.js
+      # dist: dist
       # result-encoding: string
-      
 
 - name: Use function1 result
   run: |
       echo "function1 result: ${{ steps.function1.outputs.result }}"
+
+  # You can also use actions/github-script and import your module
+  # from the path specified in the `github-script-ts` step. This allows
+  # setting multiple outputs values using core.setOutput.
+- name: Run custom function using actions/github-script
+  id: custom
+  uses: actions/github-script@v6
+  # You can pass environment variables to your script and then
+  # read them from process.env.
+  # https://github.com/actions/github-script/#use-env-as-input
+  env:
+      FOO: bar
+  with:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      result-encoding: string
+      script: |
+          const { custom } = await import("${{ steps.github-script-ts.outputs.module }}");
+          return await custom({core,context});
 ```

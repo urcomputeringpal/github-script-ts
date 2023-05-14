@@ -13,10 +13,9 @@ jobs:
 
             - uses: ./
               name: Setup
-              id: setup
+              id: github-script-ts
               with:
                   build: npm run format && npm run test && npm run build
-                  path: ./.github
 
             - name: Run prNumber
               id: prNumber
@@ -25,7 +24,6 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: prNumber
-                  path: ./.github
 
             - name: Validate result
               if: github.event_name == 'pull_request'
@@ -42,8 +40,58 @@ jobs:
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: getLabel
-                  path: ./.github
 
             - if: github.event.act != 'true' && github.event_name == 'pull_request'
               run: |
                   [ "${{ steps.getLabel.outputs.result }}" == "test" ]
+
+            - name: exportVariable suprisingly works when called in a composite run step in act
+              id: exportVariable
+              if: github.event.act == 'true'
+              env:
+                  OUTPUT_NAME: "SHOULD_NOT_WORK"
+                  OUTPUT_VALUE: "cool"
+              uses: ./
+              with:
+                  function: setOutput
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - if: github.event.act == 'true'
+              run: |
+                  set -x
+                  [ "${{ steps.exportVariable.outputs.SHOULD_NOT_WORK }}" == "cool" ]
+
+            - name: exportVariable does not bubble up from composite run steps on actions runners
+              id: exportVariableActions
+              if: github.event.act != 'true'
+              env:
+                  OUTPUT_NAME: "SHOULD_NOT_WORK"
+                  OUTPUT_VALUE: "uh oh"
+              uses: ./
+              with:
+                  function: setOutput
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - if: github.event.act != 'true'
+              run: |
+                  set -x
+                  [ "${{ steps.exportVariableActions.outputs.SHOULD_NOT_WORK }}" == "" ]
+
+            - name: Run setOutput function using actions/github-script
+              uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
+              id: setOutput
+              env:
+                  OUTPUT_NAME: "SET_OUTPUT"
+                  OUTPUT_VALUE: "worked"
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  result-encoding: string
+                  script: |
+                      const { setOutput } = await import("${{ steps.github-script-ts.outputs.module }}");
+                      const result = await setOutput({core});
+
+            - run: |
+                  set -x
+                  [ "${SET_OUTPUT}" == "worked" ]
+                  [ "${{ steps.setOutput.outputs.SET_OUTPUT }}" == "worked" ]
+                  [ "${{ env.SET_OUTPUT }}" == "worked" ]

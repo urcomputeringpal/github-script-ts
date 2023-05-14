@@ -1,7 +1,12 @@
 {
-    "name": "ts-scripts",
-    "version": "0.0.1",
+    "name": "@urcomputeringpal/github-script-ts-private-scripts",
+    "version": "0.0.2",
     "private": true,
+    "files": [
+        "dist/**/*.d.ts",
+        "dist/**/*.js"
+    ],
+    "main": "dist/index.js",
     "scripts": {
         "format": "prettier --write .",
         "format:check": "prettier --check .",

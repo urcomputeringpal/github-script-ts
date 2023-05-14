@@ -15,3 +15,14 @@ jobs:
               with:
                   access: public
                   token: ${{ secrets.NPM_TOKEN }}
+
+    renovate:
+        name: Update
+        needs: publish
+        uses: urcomputeringpal/.github/.github/workflows/renovate.yaml@main
+        with:
+            renovate_app_slug: ur-renovate
+            onboarding: "true"
+        secrets:
+            RENOVATE_APP_ID: ${{ secrets.RENOVATE_APP_ID }}
+            RENOVATE_APP_PEM: ${{ secrets.RENOVATE_APP_PEM }}
