@@ -56,7 +56,8 @@ jobs:
                   function: setOutput
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
-            - run: |
+            - if: github.event.act == 'true'
+              run: |
                   set -x
                   [ "${{ steps.exportVariable.outputs.SHOULD_NOT_WORK }}" == "cool" ]
 
@@ -65,13 +66,14 @@ jobs:
               if: github.event.act != 'true'
               env:
                   OUTPUT_NAME: "SHOULD_NOT_WORK"
-                  OUTPUT_VALUE: "cool"
+                  OUTPUT_VALUE: "uh oh"
               uses: ./
               with:
                   function: setOutput
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
-            - run: |
+            - if: github.event.act != 'true'
+              run: |
                   set -x
                   [ "${{ steps.exportVariableActions.outputs.SHOULD_NOT_WORK }}" == "" ]
 
