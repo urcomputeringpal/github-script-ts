@@ -14,7 +14,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "@urcomputeringpal/github-script-ts": "0.0.5"
+        "@urcomputeringpal/github-script-ts": "0.0.7"
     },
     "devDependencies": {
         "@types/jest": "29.5.1",
