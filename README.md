@@ -83,10 +83,10 @@ See [`action.yml`](./action.yml) for all accepted inputs.
 - name: Setup TypeScript scripts
   id: github-script-ts
   uses: urcomputeringpal/github-script-ts@v0
-  with:
-      # path: ./.github
-      # build: npm run build
-      # dist: dist
+  # with:
+  #     path: ./.github
+  #     build: npm run build
+  #     dist: dist
 
   # Run function1. If it returns a value it can be used in subsequent steps
   # by accessing the `result` output of the step like so
