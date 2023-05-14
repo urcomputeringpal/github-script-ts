@@ -1,7 +1,7 @@
 {
     "name": "@urcomputeringpal/github-script-ts",
     "version": "0.0.1",
-    "description": "A GitHub workflow for Typescript actions",
+    "description": "actions/github-script for Typescript",
     "repository": "https://github.com/urcomputeringpal/github-script-ts",
     "files": [
         "dist/**/*"
