@@ -1,4 +1,5 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["github>urcomputeringpal/.github"]
+    "extends": ["github>urcomputeringpal/.github"],
+    "addLabels": ["test"]
 }
