@@ -1,6 +1,6 @@
 {
     "name": "@urcomputeringpal/github-script-ts",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "actions/github-script for Typescript",
     "repository": "https://github.com/urcomputeringpal/github-script-ts",
     "files": [
