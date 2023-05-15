@@ -6,7 +6,7 @@ inputs:
         default: ${{ github.token }}
     path:
         description: Path to the functions
-        default: ./.github
+        default: ${{ github.workspace }}/.github
         required: true
     dist:
         description: >
@@ -116,7 +116,7 @@ runs:
           id: module
           shell: bash
           run: |
-              echo "module=${{ github.workspace }}/${{ inputs.path }}/${{ inputs.dist }}/index.js" >> "$GITHUB_OUTPUT"
+              echo "module=${{ inputs.path }}/${{ inputs.dist }}/index.js" >> "$GITHUB_OUTPUT"
 
         - name: Execute script
           if: inputs.function != ''
