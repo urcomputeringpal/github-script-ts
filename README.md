@@ -66,6 +66,11 @@ export { function1 } from "./function1";
     "main": "dist/index.js",
     "dependencies": {
         "@urcomputeringpal/github-script-ts": "0.0.7"
+    },
+    "devDependencies": {
+        "@types/node": "16.18.30",
+        "ts-loader": "9.4.2",
+        "typescript": "4.9.5"
     }
 }
 ```
