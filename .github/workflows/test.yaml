@@ -15,7 +15,21 @@ jobs:
               name: Setup
               id: github-script-ts
               with:
-                  build: npm run format && npm run test && npm run build
+                build: npm run format && npm run test && npm run build
+
+            - uses: ./
+              name: Setup
+              id: github-script-ts-2
+              with:
+                path: .github
+                build: npm run format && npm run test && npm run build
+
+            - uses: ./
+              name: Setup
+              id: github-script-ts-3
+              with:
+                path: ${{ github.workspace }}/.github
+                build: npm run format && npm run test && npm run build
 
             - name: Run prNumber
               id: prNumber
@@ -38,6 +52,7 @@ jobs:
                   PR_NUMBER: ${{ steps.prNumber.outputs.result }}
                   LABEL: "test"
               with:
+                  path: ${{ github.workspace }}/.github
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   function: getLabel
 
@@ -53,6 +68,7 @@ jobs:
                   OUTPUT_VALUE: "cool"
               uses: ./
               with:
+                  path: .github
                   function: setOutput
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
