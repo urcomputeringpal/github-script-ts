@@ -67,7 +67,7 @@ runs:
           with:
               node-version: ${{ env.node_version }}
               cache: npm
-              cache-dependency-path: ${{ inputs.path }}/package-lock.json
+              cache-dependency-path: '**/package-lock.json'
 
         - name: Get npm cache directory
           if: inputs.function == ''
