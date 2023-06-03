@@ -9,7 +9,7 @@ jobs:
             - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
             - run: npm ci
             - name: Publish
-              uses: JS-DevTools/npm-publish@541aa6b21b4a1e9990c95a92c21adc16b35e9551 # v2.1.0
+              uses: JS-DevTools/npm-publish@a25b4180b728b0279fca97d4e5bccf391685aead # v2.2.0
               # only on default branch
               if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
               with:
