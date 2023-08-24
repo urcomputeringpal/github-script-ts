@@ -6,7 +6,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+            - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
             - run: npm ci
             - name: Publish
               uses: JS-DevTools/npm-publish@a25b4180b728b0279fca97d4e5bccf391685aead # v2.2.0
