@@ -73,7 +73,7 @@ runs:
           shell: bash
           run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
-        - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+        - uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f # v3.4.3
           if: inputs.function == ''
           id: npm-cache
           with:
@@ -94,7 +94,7 @@ runs:
               echo "${{ inputs.build }}" > tmp/dist/inputs.build
               echo "${{ inputs.dist }}" > tmp/dist/inputs.dist
 
-        - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+        - uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f # v3.4.3
           if: inputs.function == ''
           id: build-cache
           with:
